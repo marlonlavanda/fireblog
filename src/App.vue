@@ -1,9 +1,9 @@
 <template>
   <div class="app-wrapper">
     <div class="app">
-      <Navigation />
+      <Navigation v-show="!navigation" />
       <router-view />
-      <Footer />
+      <Footer v-show="!navigation" />
     </div>
   </div>
 </template>
@@ -11,17 +11,35 @@
 <script>
 import Navigation from './components/Navigation.vue'
 import Footer from './components/Footer.vue'
-
+import firebase from 'firebase/app'
+import 'firebase/auth'
 export default {
   name: "app",
   components: { Navigation, Footer },
   data() {
-    return {};
+    return {
+      navigation: null,
+    };
   },
-  created() {},
+  created() {
+    this.ckeckRoute();
+    console.log(firebase.auth().currentUser)
+  },
   mounted() {},
-  methods: {},
-  watch: {},
+  methods: {
+    ckeckRoute(){
+      if(this.$route.name === "Login" || this.$route.name === "Register" || this.$route.name === "ForgotPassword") {
+        this.navigation = true;
+        return
+      }
+        this.navigation = false;
+    }
+  },
+  watch: {
+    $route() {
+      this.ckeckRoute();
+    }
+  },
 };
 </script>
 
@@ -115,6 +133,12 @@ button,
   pointer-events: none !important;
   cursor: none !important;
   background-color: rgba(128, 128, 128, 0.5) !important;
+}
+
+.error {
+  text-align: center;
+  font-size: 12px;
+  color: red;
 }
 
 .blog-card-wrap {
