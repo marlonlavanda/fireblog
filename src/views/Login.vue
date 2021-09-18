@@ -44,12 +44,14 @@ export default {
   },
   methods: {
     signIn(){
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(() => {
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+      .then(() => {
         this.$router.push({ name: "Home"});
         this.error = false;
         this.errorMessage = "";
         console.log(firebase.auth().currentUser.uid)
-      }).catch(err => {
+      })
+      .catch(err => {
         this.error = true;
         this.errorMessage = err.message;
       })

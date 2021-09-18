@@ -16,7 +16,7 @@
           <user class="icon" />
         </div>
         <div class="input">
-          <input type="text" placeholder="User Name" v-model="userName">
+          <input type="text" placeholder="Username" v-model="userName">
           <user class="icon" />
         </div>
         <div class="input">
@@ -24,10 +24,10 @@
           <email class="icon" />
         </div>
         <div class="input">
-          <input type="text" placeholder="Password" v-model="password">
+          <input type="password" placeholder="Password" v-model="password">
           <password class="icon" />
         </div>
-        <div v-if="error" class="error">{{errorMessage}}</div>
+        <div v-show="error" class="error">{{errorMessage}}</div>
       </div>
       <button @click.prevent="register">Sign Up</button>
       <div class="angle"></div>
@@ -59,21 +59,26 @@ export default {
   },
   methods: {
     async register() {
-      if( this.email !== "" && this.password !== "" && this.firstName !== "" && this.lastName !== "" && this.userName !== "" ) {
-        this.error = false;
-        this.errorMessage = "";
-        const firebaseAuth = await firebase.auth();
-        const createUser = await firebaseAuth.createUserWithEmailAndPassword(this.email, this.password);
-        const result = await createUser;
-        const dataBase = db.collection("users").doc(result.user.uid);
-        await dataBase.set({
-          firstName: this.firstName,
-          lastName: this.lastName,
-          userName: this.userName,
-          email: this.email,
-        })
-        this.$router.push({ name: 'Home' })
-        return;
+      if( this.email !== "" &&
+          this.password !== "" &&
+          this.firstName !== "" &&
+          this.lastName !== "" &&
+          this.userName !== "" ) 
+        {
+          this.error = false;
+          this.errorMessage = "";
+          const firebaseAuth = await firebase.auth();
+          const createUser = await firebaseAuth.createUserWithEmailAndPassword(this.email, this.password);
+          const result = await createUser;
+          const dataBase = db.collection("users").doc(result.user.uid);
+          await dataBase.set({
+            firstName: this.firstName,
+            lastName: this.lastName,
+            userName: this.userName,
+            email: this.email,
+          })
+          this.$router.push({ name: 'Home' })
+          return;
       }
       this.error = true;
       this.errorMessage = "Please fill out all the fields";
